@@ -166,7 +166,7 @@ if __name__=="__main__":
   # polarisations are the same. It is also assumed that file name format is
   # PSR_DYYYYMMDDTHHMMSS_CHAN_SUB.ar. More through checks are on TODO list.
   stemName = args.stemName
-  fileNames = glob.glob(stemName + "*")
+  fileNames = glob.glob(stemName + "*.ar")
   fileNames.sort()
   #print fileNames
   if len(fileNames) == 4:
