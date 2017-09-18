@@ -243,12 +243,49 @@ if __name__=="__main__":
   print "\nCleaning archive from RFI.\n"
   cleaner.run(cleanRFI)
   getArchiveInfo(cleanRFI)
+  
+  #polarization,freq and time scrunch the clean file and write the result file as output
+  print '\n FTp scrunching the cleaned file \n' 
+  p_scrunch = cleanRFI.clone()
+  p_scrunch.pscrunch()
+  p_scrunch.tscrunch_to_nsub(6)
+  p_scrunch.fscrunch_to_nchan(8)
+
+  #produce time,freq.pol scrunch and dedispers  and write it in the output
+  FTDp_scr = cleanRFI.clone()
+  FTDp_scr.dedisperse()  
+  FTDp_scr.pscrunch()
+  FTDp_scr.tscrunch()
+  FTDp_scr.fscrunch()
+
+  #produce time scrunch and dedispers  and write it in the output
+  TD_scr = cleanRFI.clone()
+  TD_scr.dedisperse()  
+  TD_scr.pscrunch()
+  TD_scr.tscrunch()
+
+  #produce freq scrunch and dedispers and write it in the output
+  FD_scr = cleanRFI.clone()
+  FD_scr.dedisperse()
+  FD_scr.pscrunch()
+  FD_scr.fscrunch()
+  
   if args.psrshSave:
     psrshFilename = addedFile + ".psh"
     print psrshFilename
     getZeroWeights(cleanRFI, psrshFilename)
+
   print "\nSaving data to file %s\n" % (addedFile + ".zap")
   cleanRFI.unload(addedFile + ".zap")
+
+  print '\n save data to file %s \n' % (addedFile + '.zap.F8T6p')
+  p_scrunch.unload(outputDir + '/' + addedFile + ".zap.F8T6p" )
+
+  print '\n scrunching on the time and save to file %s \n' % (addedFile + '.zap.TpD')
+  TD_scr.unload(outputDir + '/' + addedFile + ".zap.TpD" )
+
+  print '\n scrunching on the frequancy and save to %s \n' % (addedFile + '.zap.FpD')
+  FD_scr.unload(outputDir + '/' + addedFile + ".zap.FpD" )
 
   # End timing script and produce result
   scriptEndTime = time.time()
